@@ -17,12 +17,7 @@ else()
 endif()
 find_package(ROOT REQUIRED)
 
-set(Garfield_DIR $ENV{GARFIELD_HOME})
-set(Garfield_INC_DIR $ENV{GARFIELD_HOME}/include)
-set(Heed_DIR $ENV{GARFIELD_HOME}/Heed)
-set(Garfield_LIBRARIES Garfield)
 
-message(STATUS "Found Garfield in ${Garfield_DIR}")
 message(STATUS "Found HEED in ${Heed_DIR}")
 
 
@@ -34,7 +29,6 @@ include(${Geant4_USE_FILE})
 include_directories(${PROJECT_SOURCE_DIR}/include)
 include(${ROOT_USE_FILE})
 include_directories(${PROJECT_SOURCE_DIR}/root-style)
-include_directories(${Garfield_INC_DIR})
 include_directories(${Heed_INC_DIR})
 
 
@@ -51,7 +45,6 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 add_executable(scintillator-sipm scintillator-sipm.cc ${sources} ${headers})
 target_link_libraries(scintillator-sipm ${Geant4_LIBRARIES})
 target_link_libraries(scintillator-sipm ${ROOT_LIBRARIES})
-target_link_libraries(scintillator-sipm ${Garfield_LIBRARIES})
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
