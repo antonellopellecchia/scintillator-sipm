@@ -19,12 +19,10 @@ find_package(ROOT REQUIRED)
 
 set(Garfield_DIR $ENV{GARFIELD_HOME})
 set(Garfield_INC_DIR $ENV{GARFIELD_HOME}/include)
-set(Garfield_LIB_DIR $ENV{GARFIELD_HOME}/lib)
 set(Heed_DIR $ENV{GARFIELD_HOME}/Heed)
 set(Garfield_LIBRARIES Garfield)
 
 message(STATUS "Found Garfield in ${Garfield_DIR}")
-message(STATUS "Found Garfield libs in ${Garfield_LIB_DIR}")
 message(STATUS "Found HEED in ${Heed_DIR}")
 
 
@@ -39,7 +37,6 @@ include_directories(${PROJECT_SOURCE_DIR}/root-style)
 include_directories(${Garfield_INC_DIR})
 include_directories(${Heed_INC_DIR})
 
-link_directories(${Garfield_LIB_DIR})
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
