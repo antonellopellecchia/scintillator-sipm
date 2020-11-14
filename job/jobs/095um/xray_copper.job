@@ -1,0 +1,11 @@
+universe = vanilla
+executable = /lustrehome/antonellopellecchia/simulations/geant4/xray_copper/job/jobs/095um/xray_copper.sh
+initialdir = /lustrehome/antonellopellecchia/simulations/geant4/xray_copper/
+output = job/jobs/095um/xray_copper.out
+error = job/jobs/095um/xray_copper.error
+log = job/jobs/095um/xray_copper.log
+notify_user = Antonello.Pellecchia@ba.infn.it
+request_memory = 16 GB
+request_cpus = 1
+rank = Memory
+queue

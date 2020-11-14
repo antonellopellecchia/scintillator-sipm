@@ -1,0 +1,1 @@
+TStyle *setStyle();

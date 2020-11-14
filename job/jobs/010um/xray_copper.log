@@ -1,0 +1,60 @@
+000 (9751201.000.000) 05/21 23:13:26 Job submitted from host: <90.147.169.224:9618?addrs=90.147.169.224-9618+[--1]-9618&noUDP&sock=5858_ade1_3>
+...
+001 (9751201.000.000) 05/21 23:14:09 Job executing on host: <90.147.169.170:9618?addrs=90.147.169.170-9618+[--1]-9618&noUDP&sock=46587_62b2_3>
+...
+006 (9751201.000.000) 05/21 23:14:18 Image size of job updated: 48664
+	12  -  MemoryUsage of job (MB)
+	11944  -  ResidentSetSize of job (KB)
+...
+006 (9751201.000.000) 05/21 23:15:59 Image size of job updated: 435020
+	359  -  MemoryUsage of job (MB)
+	367408  -  ResidentSetSize of job (KB)
+...
+004 (9751201.000.000) 05/21 23:15:59 Job was evicted.
+	(0) Job was not checkpointed.
+		Usr 0 00:01:31, Sys 0 00:00:03  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated
+	   Cpus                 :                 1         1
+	   Disk (KB)            :        1        1  18249474
+	   Memory (MB)          :      359    16384     16384
+...
+009 (9751201.000.000) 05/21 23:15:59 Job was aborted by the user.
+	via condor_rm (by user antonellopellecchia)
+...
+000 (9751221.000.000) 05/21 23:17:00 Job submitted from host: <90.147.169.224:9618?addrs=90.147.169.224-9618+[--1]-9618&noUDP&sock=5858_ade1_3>
+...
+001 (9751221.000.000) 05/21 23:17:08 Job executing on host: <90.147.168.20:9618?addrs=90.147.168.20-9618+[--1]-9618&noUDP&sock=2126_d66f_3>
+...
+006 (9751221.000.000) 05/21 23:17:17 Image size of job updated: 49748
+	13  -  MemoryUsage of job (MB)
+	12860  -  ResidentSetSize of job (KB)
+...
+006 (9751221.000.000) 05/21 23:22:18 Image size of job updated: 1199364
+	1108  -  MemoryUsage of job (MB)
+	1134436  -  ResidentSetSize of job (KB)
+...
+006 (9751221.000.000) 05/21 23:27:18 Image size of job updated: 2289456
+	2173  -  MemoryUsage of job (MB)
+	2224528  -  ResidentSetSize of job (KB)
+...
+005 (9751221.000.000) 05/21 23:28:11 Job terminated.
+	(1) Normal termination (return value 0)
+		Usr 0 00:10:42, Sys 0 00:00:06  -  Run Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Run Local Usage
+		Usr 0 00:10:42, Sys 0 00:00:06  -  Total Remote Usage
+		Usr 0 00:00:00, Sys 0 00:00:00  -  Total Local Usage
+	0  -  Run Bytes Sent By Job
+	0  -  Run Bytes Received By Job
+	0  -  Total Bytes Sent By Job
+	0  -  Total Bytes Received By Job
+	Partitionable Resources :    Usage  Request Allocated
+	   Cpus                 :                 1         1
+	   Disk (KB)            :        1        1  18248561
+	   Memory (MB)          :     2173    16384     16384
+...
+009 (9751201.000.000) 05/22 00:00:03 Job was aborted by the user.
+	via condor_rm -forcex (by user condor)
+...

@@ -1,0 +1,13 @@
+/control/verbose 1
+/run/verbose 1
+/event/verbose 0
+/tracking/verbose 0
+
+#/run/setCut 0.1 mm
+
+/run/initialize
+
+#/process/em/fluo true
+#/process/em/auger true
+
+/run/beamOn 10000
