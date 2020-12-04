@@ -24,10 +24,10 @@
 // ********************************************************************
 //
 //
-/// \file DetectorConstruction.cc
-/// \brief Implementation of the DetectorConstruction class
+/// \file DetectorConstructionLarge.cc
+/// \brief Implementation of the DetectorConstructionLarge class
 
-#include "DetectorConstruction.hh"
+#include "DetectorConstructionLarge.hh"
 
 #include "G4Material.hh"
 #include "G4Element.hh"
@@ -45,18 +45,22 @@
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-DetectorConstruction::DetectorConstruction():G4VUserDetectorConstruction() {}
+// 10 x 1 x 0.5 cm scintillator with single SiPM on one short face
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-DetectorConstruction::~DetectorConstruction()
+DetectorConstructionLarge::DetectorConstructionLarge(G4int nSipm):G4VUserDetectorConstruction() {
+  this->nSipm = nSipm;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+DetectorConstructionLarge::~DetectorConstructionLarge()
 { }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-G4VPhysicalVolume* DetectorConstruction::Construct()
+G4VPhysicalVolume* DetectorConstructionLarge::Construct()
 {
   ConstructMaterials();
 
@@ -72,8 +76,8 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   G4MaterialPropertiesTable *scintillatorProperties = new G4MaterialPropertiesTable();
 
-  //scintillatorProperties->AddConstProperty("SCINTILLATIONYIELD", 9000./MeV);
-  scintillatorProperties->AddConstProperty("SCINTILLATIONYIELD", 9./MeV);
+  scintillatorProperties->AddConstProperty("SCINTILLATIONYIELD", 9000./MeV);
+  //scintillatorProperties->AddConstProperty("SCINTILLATIONYIELD", 9./MeV); // for testing
   scintillatorProperties->AddConstProperty("FASTTIMECONSTANT", 0.7*ns);
   scintillatorProperties->AddConstProperty("RESOLUTIONSCALE", 1.0);
   scintillatorProperties->AddConstProperty("YIELDRATIO", 1.0);
@@ -119,20 +123,21 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   copper->SetMaterialPropertiesTable(copperProperties);
   
   G4double scintillatorSizeX = 100*mm;
-  G4double scintillatorSizeY = 10*mm;
-  G4double sipmCathodeLength = 6*mm;
+  G4double scintillatorSizeY = 5*mm;
+  G4double scintillatorSizeZ = 100*mm;
+  G4double sipmCathodeLength = 3*mm;
   
-  G4double scintillatorThickness = 100*mm;
   G4double sipmCathodeThickness = 0.5*mm;
 
   G4double scintillatorZ = 0.*mm;
-  G4double sipmCathodeZ = scintillatorZ + 0.5*scintillatorThickness + 0.5*sipmCathodeThickness;
+  G4double sipm1CathodeZ = scintillatorZ + 0.5*scintillatorSizeZ + 0.5*sipmCathodeThickness;
+  G4double sipm2CathodeZ = scintillatorZ - 0.5*scintillatorSizeZ - 0.5*sipmCathodeThickness;
   
   // maximum object size in xy
   G4double sizeXY = scintillatorSizeX*1.2;
   // envelope parameters
   G4double envSizeXY = 2*sizeXY;
-  G4double envSizeZ = 3*(scintillatorThickness+sipmCathodeThickness);
+  G4double envSizeZ = 3*(scintillatorSizeZ+sipmCathodeThickness);
   
   // Option to switch on/off checking of volumes overlaps
   //
@@ -160,7 +165,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //
   // Scintillator
   //
-  G4Box *scintillatorSolid = new G4Box("ScintillatorBox", 0.5*scintillatorSizeX, 0.5*scintillatorSizeY, 0.5*scintillatorThickness);
+  G4Box *scintillatorSolid = new G4Box("ScintillatorBox", 0.5*scintillatorSizeX, 0.5*scintillatorSizeY, 0.5*scintillatorSizeZ);
   fScintillatorLogical = new G4LogicalVolume(scintillatorSolid, polyvinyltoluene, "ScintillatorLogical");
   G4VPhysicalVolume* physScint = new G4PVPlacement(0, G4ThreeVector(0.,0.,scintillatorZ), fScintillatorLogical, "ScintillatorPhysical", logicEnv, false, 0, checkOverlaps);
 
@@ -169,7 +174,13 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //
   G4Box *sipmSolid = new G4Box("SiPMBox", 0.5*sipmCathodeLength, 0.5*sipmCathodeLength, 0.5*sipmCathodeThickness);
   fSipmLogical = new G4LogicalVolume(sipmSolid, copper, "SiPMLogical");
-  new G4PVPlacement(0, G4ThreeVector(0.,0.,sipmCathodeZ), fSipmLogical, "SiPMPhysical", logicEnv, false, 0, checkOverlaps);
+
+  for (int iSipm=0; iSipm<this->nSipm; iSipm++) {
+    G4ThreeVector sipmPlacement1 = G4ThreeVector(-0.5*scintillatorSizeX + scintillatorSizeX/this->nSipm*(iSipm+0.5),0.,sipm1CathodeZ);
+    G4ThreeVector sipmPlacement2 = G4ThreeVector(-0.5*scintillatorSizeX + scintillatorSizeX/this->nSipm*(iSipm+0.5),0.,sipm2CathodeZ);
+    new G4PVPlacement(0, sipmPlacement1, fSipmLogical, G4String("SiPMPhysical1_"+iSipm), logicEnv, false, 0, checkOverlaps);
+    new G4PVPlacement(0, sipmPlacement2, fSipmLogical, G4String("SiPMPhysical2_"+iSipm), logicEnv, false, 0, checkOverlaps);
+  }
 
   G4OpticalSurface *teflonSurface = new G4OpticalSurface("TeflonSurface");
   teflonSurface->SetType(dielectric_LUTDAVIS);
@@ -180,7 +191,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double teflonReflectivity[NPHOTONENERGIES];
   G4double teflonEfficiency[NPHOTONENERGIES];
   for (int i=0; i<NPHOTONENERGIES; i++) {
-    teflonReflectivity[i] = 0.9;
+    teflonReflectivity[i] = 0.99;
     teflonEfficiency[i] = 1.;
   }
   /*const G4int NUM = 2;
@@ -206,7 +217,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   return physWorld;
 }
 
-void DetectorConstruction::ConstructMaterials() {
+void DetectorConstructionLarge::ConstructMaterials() {
    auto nistManager = G4NistManager::Instance();
 
    // Air 

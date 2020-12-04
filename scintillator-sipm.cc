@@ -28,6 +28,8 @@
 /// \brief Main program of the B1 example
 
 #include "DetectorConstruction.hh"
+#include "DetectorConstructionSmall.hh"
+#include "DetectorConstructionLarge.hh"
 #include "ActionInitialization.hh"
 //#include "PhysicsList.hh"
 
@@ -63,17 +65,19 @@ int main(int argc,char** argv)
   G4int copperThickness = 0;
 
   string outFilePath = "";
-  if (argc == 1) {
+  string detectorGeometry = "";
+  G4int nSipm = 10;
+  if (argc<3) {
     ui = new G4UIExecutive(argc, argv);
     headless = false;
-  } else if (argc < 3) {
-    G4cout << "Specify run file and output ROOT file." << G4endl;
-    return 1;
+    if (argc==2) nSipm = atoi(argv[1]);
   } else {
     if (string("test") == argv[2]) { // headless, but no output
       headless = false;
     } else { // headless, with output file
       outFilePath = string(argv[2]);
+      if (argc>3) detectorGeometry = string(argv[3]);
+      if (argc>4) nSipm = atoi(argv[4]);
     }
   }
 
@@ -91,7 +95,10 @@ int main(int argc,char** argv)
   // Set mandatory initialization classes
   //
   // Detector construction
-  runManager->SetUserInitialization(new DetectorConstruction());
+  if (string("small")==detectorGeometry) runManager->SetUserInitialization(new DetectorConstructionSmall());
+  else if (string("large")==detectorGeometry) runManager->SetUserInitialization(new DetectorConstructionLarge(nSipm));
+  else if (string("test")==detectorGeometry) runManager->SetUserInitialization(new DetectorConstruction());
+  else runManager->SetUserInitialization(new DetectorConstructionLarge(nSipm)); // fallback large geometry
 
   G4VModularPhysicsList* physicsList = new FTFP_BERT;
   physicsList->ReplacePhysics(new G4EmStandardPhysics_option4());
@@ -100,6 +107,8 @@ int main(int argc,char** argv)
 
   opticalPhysics->SetScintillationYieldFactor(1.0);
   opticalPhysics->SetScintillationExcitationRatio(0.0);
+
+  opticalPhysics->Configure(kCerenkov, false);
 
   //opticalPhysics->SetMaxNumPhotonsPerStep(100);
   //opticalPhysics->SetMaxBetaChangePerStep(10.0);

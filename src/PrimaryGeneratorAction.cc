@@ -136,7 +136,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   // uniform beam position
   size = 0.99;
   x0 = size * scintillatorSizeX * (G4UniformRand()-0.5);
-  y0 = size * scintillatorSizeY * (G4UniformRand()-0.5);
+  //y0 = size * scintillatorSizeY * (G4UniformRand()-0.5);
   z0 = size * scintillatorSizeZ * (G4UniformRand()-0.5);
   y0 = scintillatorSizeY * 10;
 

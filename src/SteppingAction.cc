@@ -29,12 +29,13 @@
 
 #include "SteppingAction.hh"
 #include "EventAction.hh"
-#include "DetectorConstruction.hh"
+//#include "DetectorConstruction.hh"
 
 #include "G4Step.hh"
 #include "G4Event.hh"
 #include "G4RunManager.hh"
 #include "G4LogicalVolume.hh"
+#include "G4LogicalVolumeStore.hh"
 
 #include "G4OpticalPhoton.hh"
 
@@ -65,9 +66,11 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
   G4int trackID = track->GetTrackID();
 
   if (!scintillatorVolume || !sipmVolume ) {
-    const DetectorConstruction* detectorConstruction = static_cast<const DetectorConstruction*> (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
-    scintillatorVolume = detectorConstruction->GetScintillator();
-    sipmVolume = detectorConstruction->GetSipm();
+    // In order to avoid dependence of SteppingAction
+    // on DetectorConstruction class we get Envelope volume
+    // from G4LogicalVolumeStore.
+    scintillatorVolume = G4LogicalVolumeStore::GetInstance()->GetVolume("ScintillatorLogical");
+    sipmVolume = G4LogicalVolumeStore::GetInstance()->GetVolume("SiPMLogical");
   }
   
   G4LogicalVolume* volume = step->GetPreStepPoint()-> GetTouchableHandle()->GetVolume()->GetLogicalVolume();
@@ -83,9 +86,8 @@ void SteppingAction::UserSteppingAction(const G4Step* step)
         //G4cout << secondary->GetDynamicParticle()->GetParticleDefinition()->GetParticleName() << G4endl;
         if (secondary->GetParentID()>0 &&
           secondary->GetDynamicParticle()->GetParticleDefinition() ==G4OpticalPhoton::OpticalPhotonDefinition()) {
-           if (secondary->GetCreatorProcess()->GetProcessName()=="Scintillation")
-           this->eventAction->scintillationCount++;
-         }
+           if (secondary->GetCreatorProcess()->GetProcessName()=="Scintillation") this->eventAction->scintillationCount++;
+          }
       }
     }
   } else if (volume==sipmVolume) {
