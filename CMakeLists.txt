@@ -57,6 +57,7 @@ set(EXAMPLEB1_SCRIPTS
   run2.mac
   run.mac
   vis.mac
+  analysis.py
   )
 
 foreach(_script ${EXAMPLEB1_SCRIPTS})
